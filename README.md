@@ -168,9 +168,9 @@ Desarrollador Frontend junior.
 ## 📄 Licencia
 
 MIT
-
 ---
 
 ## 🤝 Contribuciones
 
 Las contribuciones son bienvenidas. Por favor, abre un issue o un pull request para sugerir mejoras o reportar bugs.
+
