@@ -3,7 +3,7 @@
 Este proyecto es una aplicación web moderna y responsive para explorar y comprar productos, desarrollada con **React**, **Vite** y **TailwindCSS**.
 
 
-[🌐 Ver sitio en producción](https://dashboard-sage-tau.vercel.app/)
+[🌐 Ver sitio en producción](https://e-commerce-two-xi-25.vercel.app/)
 
 ---
 
