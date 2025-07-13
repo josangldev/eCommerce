@@ -1,34 +1,87 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react';
+import Header from './components/Header'
+import ProductList from './components/ProductList'
+import Sidebar from './components/Sidebar'
 import './App.css'
+import { CartProvider } from './context/CartProvider'
+import type { Product } from './types'
+import Footer from './components/Footer'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [allProducts, setAllProducts] = useState<Product[]>([])
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const [categoryFilter, setCategoryFilter] = useState('all')
+  const [priceFilter, setPriceFilter] = useState('all')
+  const [searchQuery, setSearchQuery] = useState('')
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true)
+        const categories = ["men's clothing", "women's clothing"]
+        const requests = categories.map(category =>
+          fetch(`https://fakestoreapi.com/products/category/${encodeURIComponent(category)}`)
+            .then(res => {
+              if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+              return res.json()
+            })
+        )
+        const results = await Promise.all(requests)
+        const products = results.flat()
+        setAllProducts(products)
+      } catch (err) {
+        setError("Failed to fetch products")
+        console.error(err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchProducts()
+  }, [])
+
+  useEffect(() => {
+    let products = [...allProducts]
+
+    if (searchQuery) {
+      products = products.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    }
+    if (categoryFilter !== 'all') {
+      products = products.filter(p => p.category === categoryFilter)
+    }
+    if (priceFilter !== 'all') {
+      const [min, max] = priceFilter.split('-').map(Number)
+      products = products.filter(p => p.price >= min && p.price <= max)
+    }
+
+    setFilteredProducts(products)
+  }, [searchQuery, categoryFilter, priceFilter, allProducts])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <CartProvider>
+      <div className='App'>
+        <Header 
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+        />
+        <main className="main-content">
+          <Sidebar 
+            categoryFilter={categoryFilter}
+            onCategoryChange={setCategoryFilter}
+            priceFilter={priceFilter}
+            onPriceChange={setPriceFilter}
+          />
+          <ProductList 
+            loading={loading}
+            error={error}
+            products={filteredProducts}
+          />
+        </main>
+        <Footer />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </CartProvider>
   )
 }
 
