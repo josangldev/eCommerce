@@ -6,9 +6,11 @@ interface Props {
   product: Product
 }
 
+// Componente ProductCard: muestra la información de un producto y permite añadirlo al carrito
 const ProductCard = ({ product }: Props) => {
   const { dispatch } = useContext(CartContext)
 
+  // Envía la acción para añadir el producto al carrito global
   const handleAddToCart = () => {
     dispatch({ type: 'ADD_TO_CART', payload: product })
   }

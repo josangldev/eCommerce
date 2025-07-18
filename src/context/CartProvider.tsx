@@ -2,6 +2,7 @@ import { useReducer, useEffect } from 'react';
 import { CartContext, initialState } from './CartContextDef';
 import type { CartState, CartAction } from './CartContextDef';
 
+// Reducer que maneja las acciones principales del carrito: añadir, eliminar, incrementar, decrementar, cargar y limpiar
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case 'ADD_TO_CART': {
@@ -50,6 +51,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
   }
 };
 
+// CartProvider expone el estado y las acciones del carrito a toda la app
 interface CartProviderProps {
   children: React.ReactNode;
 }
@@ -57,6 +59,7 @@ interface CartProviderProps {
 export const CartProvider = ({ children }: CartProviderProps) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
+  // Al montar, carga el carrito guardado en localStorage si existe
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {

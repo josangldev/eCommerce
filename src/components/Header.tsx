@@ -8,10 +8,13 @@ interface HeaderProps {
   onSearchChange: (query: string) => void;
 }
 
+// Componente Header: gestiona la barra superior, búsqueda, acceso al carrito y autenticación
 const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
   const { state } = useContext(CartContext);
+  // Estado para mostrar/ocultar el carrito y la vista de autenticación
   const [isCartVisible, setIsCartVisible] = useState(false);
   const [isAuthVisible, setIsAuthVisible] = useState(false);
+  // Muestra animación cuando se añade un producto al carrito
   const [cartAnim, setCartAnim] = useState(false);
 
   useEffect(() => {
@@ -22,11 +25,13 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
     }
   }, [state.cart.length]);
 
+  // Alterna la visibilidad del carrito
   const handleCartClick = () => {
     setIsCartVisible(prev => !prev);
     setIsAuthVisible(false); 
   };
 
+  // Alterna la visibilidad de la autenticación
   const handleAuthClick = () => {
     setIsAuthVisible(prev => !prev);
     setIsCartVisible(false);

@@ -28,14 +28,18 @@ const ChevronIcon = ({ isOpen }: { isOpen: boolean }) => (
     </svg>
 );
 
+// Componente Sidebar: permite filtrar productos por género y precio
 const Sidebar = ({ onCategoryChange, categoryFilter, onPriceChange, priceFilter }: SidebarProps) => {
+  // Estado para abrir/cerrar el sidebar y las secciones de filtros
   const [isOpen, setIsOpen] = useState(false);
   const [openSections, setOpenSections] = useState({ gender: true, price: true, size: true, color: true });
 
+  // Alterna la visibilidad de cada sección de filtros
   const toggleSection = (section: keyof typeof openSections) => {
     setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
+  // Renderiza una opción de filtro tipo radio
   const renderRadioOption = (groupName: string, value: string, label: string, checkedValue: string, onChange: (value: string) => void) => (
     <div key={value}>
         <label htmlFor={`${groupName}-${value}`} className="flex items-center cursor-pointer text-gray-700">
@@ -56,6 +60,7 @@ const Sidebar = ({ onCategoryChange, categoryFilter, onPriceChange, priceFilter 
     </div>
   );
 
+  // Renderiza una sección de filtros (género o precio)
   const renderSection = (section: keyof typeof openSections, title: string, content: React.ReactNode) => (
     <div className="mb-6">
       <button

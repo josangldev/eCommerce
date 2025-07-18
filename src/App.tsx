@@ -7,6 +7,8 @@ import { CartProvider } from './context/CartProvider'
 import type { Product } from './types'
 import Footer from './components/Footer'
 
+// Componente principal de la aplicación
+// Gestiona el estado global de productos, filtros y errores
 function App() {
   const [allProducts, setAllProducts] = useState<Product[]>([])
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
@@ -17,6 +19,7 @@ function App() {
   const [priceFilter, setPriceFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
 
+  // Hook para obtener los productos desde la API al cargar la app
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -42,6 +45,7 @@ function App() {
     fetchProducts()
   }, [])
 
+  // Hook para filtrar productos según búsqueda, categoría y precio
   useEffect(() => {
     let products = [...allProducts]
 
@@ -60,25 +64,31 @@ function App() {
   }, [searchQuery, categoryFilter, priceFilter, allProducts])
 
   return (
+    // CartProvider provee el contexto global del carrito a toda la app
     <CartProvider>
+      {/* Estructura principal: Header, Sidebar, ProductList y Footer */}
       <div className='App'>
+        {/* Header gestiona la búsqueda y acceso al carrito */}
         <Header 
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
         />
         <main className="main-content">
+          {/* Sidebar permite filtrar por categoría y precio */}
           <Sidebar 
             categoryFilter={categoryFilter}
             onCategoryChange={setCategoryFilter}
             priceFilter={priceFilter}
             onPriceChange={setPriceFilter}
           />
+          {/* ProductList muestra los productos filtrados */}
           <ProductList 
             loading={loading}
             error={error}
             products={filteredProducts}
           />
         </main>
+        {/* Footer con enlaces sociales */}
         <Footer />
       </div>
     </CartProvider>
